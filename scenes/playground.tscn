@@ -1,4 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://cxn7ypxt877hx"]
+[gd_scene load_steps=3 format=3 uid="uid://cxn7ypxt877hx"]
+
+[ext_resource type="PackedScene" uid="uid://bmofdg6b4fvyo" path="res://objects/player.tscn" id="1_nfl6y"]
 
 [sub_resource type="Environment" id="Environment_l5m1y"]
 background_mode = 1
@@ -18,4 +20,6 @@ environment = SubResource("Environment_l5m1y")
 [node name="CSGBox3D" type="CSGBox3D" parent="Level"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 use_collision = true
-size = Vector3(20, 0.5, 20)
+size = Vector3(20, 1, 20)
+
+[node name="Player" parent="." instance=ExtResource("1_nfl6y")]
