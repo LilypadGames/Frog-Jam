@@ -1,6 +1,18 @@
-[gd_scene load_steps=3 format=3 uid="uid://cxn7ypxt877hx"]
+[gd_scene load_steps=15 format=3 uid="uid://cxn7ypxt877hx"]
 
 [ext_resource type="PackedScene" uid="uid://bmofdg6b4fvyo" path="res://objects/player.tscn" id="1_nfl6y"]
+[ext_resource type="Texture2D" uid="uid://d1qtqslkxnoe5" path="res://assets/fonts/inputs/kenny_input-prompts/Keyboard & Mouse/Vector/keyboard_shift_outline.svg" id="2_ajsgb"]
+[ext_resource type="FontFile" uid="uid://drlr7yk0j752a" path="res://assets/fonts/Bitstream-Vera-Sans/Vera.ttf" id="2_hu44g"]
+[ext_resource type="Texture2D" uid="uid://cx5xq8ud4idhp" path="res://assets/fonts/inputs/kenny_input-prompts/Keyboard & Mouse/Vector/keyboard_space_outline.svg" id="3_d8vot"]
+[ext_resource type="Script" path="res://scripts/input_hint.gd" id="4_4xjeh"]
+[ext_resource type="Texture2D" uid="uid://db01uu0pap6v6" path="res://assets/fonts/inputs/kenny_input-prompts/Keyboard & Mouse/Vector/keyboard_shift.svg" id="5_27aqq"]
+[ext_resource type="Texture2D" uid="uid://cnmfmabe2au5h" path="res://assets/fonts/inputs/kenny_input-prompts/Keyboard & Mouse/Vector/mouse_left_outline.svg" id="5_yn82w"]
+[ext_resource type="Texture2D" uid="uid://cqvwnqxjqtwvq" path="res://assets/fonts/inputs/kenny_input-prompts/Keyboard & Mouse/Vector/mouse_right_outline.svg" id="6_gx7b2"]
+[ext_resource type="Texture2D" uid="uid://dpft24cc82hxn" path="res://assets/fonts/inputs/kenny_input-prompts/Keyboard & Mouse/Vector/keyboard_e_outline.svg" id="7_nxf7p"]
+[ext_resource type="Texture2D" uid="uid://cwdggpwcri67n" path="res://assets/fonts/inputs/kenny_input-prompts/Keyboard & Mouse/Vector/keyboard_space.svg" id="7_xa4oj"]
+[ext_resource type="Texture2D" uid="uid://njkj22cnrnuh" path="res://assets/fonts/inputs/kenny_input-prompts/Keyboard & Mouse/Vector/keyboard_q_outline.svg" id="8_k0obc"]
+[ext_resource type="Texture2D" uid="uid://bq2oxaojw1ve0" path="res://assets/fonts/inputs/kenny_input-prompts/Keyboard & Mouse/Vector/keyboard_e.svg" id="13_ojkla"]
+[ext_resource type="Texture2D" uid="uid://ct1tt3s7c5r01" path="res://assets/fonts/inputs/kenny_input-prompts/Keyboard & Mouse/Vector/keyboard_q.svg" id="15_cbjgl"]
 
 [sub_resource type="Environment" id="Environment_l5m1y"]
 background_mode = 1
@@ -27,3 +39,89 @@ use_collision = true
 size = Vector3(50, 1, 50)
 
 [node name="Player" parent="." instance=ExtResource("1_nfl6y")]
+
+[node name="HUD" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 5.0
+offset_bottom = 5.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Input Hints" type="Label" parent="HUD"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -117.0
+offset_top = -279.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = 0
+theme_override_fonts/font = ExtResource("2_hu44g")
+theme_override_font_sizes/font_size = 20
+text = "Sprint
+
+Dodge
+
+Attack
+
+Target
+
+Rotate
+Camera"
+
+[node name="Input Icons" type="CanvasGroup" parent="HUD/Input Hints"]
+
+[node name="Sprint" type="Sprite2D" parent="HUD/Input Hints/Input Icons"]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(-33, 13)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("2_ajsgb")
+script = ExtResource("4_4xjeh")
+action_name = "boost"
+pressed_texture = ExtResource("5_27aqq")
+
+[node name="Dodge" type="Sprite2D" parent="HUD/Input Hints/Input Icons"]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(-33, 61)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("3_d8vot")
+script = ExtResource("4_4xjeh")
+action_name = "dodge"
+pressed_texture = ExtResource("7_xa4oj")
+
+[node name="Attack" type="Sprite2D" parent="HUD/Input Hints/Input Icons"]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(-33, 108)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("5_yn82w")
+
+[node name="Target" type="Sprite2D" parent="HUD/Input Hints/Input Icons"]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(-33, 157)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("6_gx7b2")
+
+[node name="Rotate Right" type="Sprite2D" parent="HUD/Input Hints/Input Icons"]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(-33, 215.6)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("7_nxf7p")
+script = ExtResource("4_4xjeh")
+action_name = "ui_page_right"
+pressed_texture = ExtResource("13_ojkla")
+
+[node name="Rotate Left" type="Sprite2D" parent="HUD/Input Hints/Input Icons"]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(-74.4, 215.6)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("8_k0obc")
+script = ExtResource("4_4xjeh")
+action_name = "ui_page_left"
+pressed_texture = ExtResource("15_cbjgl")
