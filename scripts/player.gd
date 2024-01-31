@@ -5,7 +5,8 @@ extends CharacterBody3D
 @export_category("References")
 @onready var camera_origin: Node3D = %CameraOrigin
 @onready var character: Node3D = %Character
-@onready var hitbox: Area3D = %Hitbox
+@onready var hitbox_horizontal: Area3D = %HitboxHorizontal
+@onready var hitbox_vertical: Area3D = %HitboxVertical
 @onready var animation: AnimationPlayer = %AnimationPlayer
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
@@ -16,15 +17,15 @@ const CAMERA_TARGET_SPEED := 15.0 # the speed the camera rotates to a target
 const CHARACTER_ROTATION_SPEED := 5.0 # the speed the player character rotates
 const MOVEMENT_SPEED := 6.0 # the speed the player character moves
 const BOOST_RATE := 2.0 # the multiplier on movement speed when boosting (sprinting)
-const DODGE_RATE := 3.0 # the multipler on movement speed when dodging (rolling)
+const DODGE_RATE := 1.5 # the multipler on movement speed when dodging (rolling)
 const TARGET_MAX_DISTANCE := 15.0 # max positional distance an enemy can be to be targetted
 
 # state
 var committed := false # whether the player is currently commited to a movement option or not (attacking, dodging, etc.)
-var targeted: Node3D # the currently targeted object
+var targeted: Enemy # the currently targeted object
 var dodge_direction: Vector3 # the direction of the current dodge roll
 
-func _physics_process(delta):
+func _physics_process(delta) -> void:
 	# camera
 	handle_camera(delta)
 
@@ -64,12 +65,12 @@ func handle_camera(delta: float) -> void:
 		# get target
 		if not targeted:
 			# init closest enemy marker 
-			var closest_enemy: Node3D
+			var closest_enemy: Enemy
 			var closest_enemy_distance: int
 
 			# find closest enemy
 			for enemy in get_tree().get_nodes_in_group("Enemy"):
-				enemy = enemy as Node3D
+				enemy = enemy as Enemy
 
 				# get distance
 				var distance = enemy.global_position.distance_to(self.global_position)
@@ -82,20 +83,20 @@ func handle_camera(delta: float) -> void:
 			# set closest enemy 
 			if closest_enemy:
 				targeted = closest_enemy
-				targeted.get("target_marker").visible = true
+				targeted.on_target_lock_start()
 
 		# target found
 		if targeted:
 			# no longer within target distance
 			if targeted.global_position.distance_to(self.global_position) > TARGET_MAX_DISTANCE:
 				# remove target
-				targeted.get("target_marker").visible = false
+				targeted.on_target_lock_end()
 				targeted = null
 
 			# still in target distance
 			else:
 				# rotate camera towards locked on enemy
-				camera_origin.global_rotation.y = lerp_angle(camera_origin.global_rotation.y, atan2(self.position.x - targeted.global_position.x, self.position.z - targeted.global_position.z), delta * CAMERA_TARGET_SPEED)
+				camera_origin.global_rotation.y = lerp_angle(camera_origin.global_rotation.y, atan2(targeted.global_position.x - self.position.x, targeted.global_position.z - self.position.z), delta * CAMERA_TARGET_SPEED)
 
 				# dont allow rotation of the camera
 				return
@@ -103,7 +104,7 @@ func handle_camera(delta: float) -> void:
 	# has target but not targeting
 	elif targeted:
 		# remove target
-		targeted.get("target_marker").visible = false
+		targeted.on_target_lock_end()
 		targeted = null
 
 	# rotate camera left
@@ -270,12 +271,24 @@ func _on_animation_player_animation_finished(_anim_name: String) -> void:
 		committed = false
 
 # called when player is attacking during attack animation
-func _on_start_hitbox() -> void:
+func _on_start_hitbox(type: String) -> void:
+	# get hitbox
+	var hitbox = hitbox_horizontal
+	if type == "vertical":
+		hitbox = hitbox_vertical
+
+	# enable hitbox
 	hitbox.monitorable = true
 	hitbox.monitoring = true
 
 # called when player is done attacking during attack animation
-func _on_end_hitbox() -> void:
+func _on_end_hitbox(type: String) -> void:
+	# get hitbox
+	var hitbox = hitbox_horizontal
+	if type == "vertical":
+		hitbox = hitbox_vertical
+
+	# disable hitbox
 	hitbox.monitorable = false
 	hitbox.monitoring = false
 
