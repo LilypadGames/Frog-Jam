@@ -4,6 +4,7 @@
 [ext_resource type="AnimationLibrary" uid="uid://cds3rkfe3d7ah" path="res://assets/animations/dummy_anims.res" id="2_y1178"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rw352"]
+albedo_color = Color(1, 0.541176, 0.478431, 1)
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_5y1ep"]
 resource_name = "chibi_Body"
