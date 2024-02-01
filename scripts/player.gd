@@ -16,9 +16,11 @@ const CAMERA_SPEED := 2.0 # the speed the camera rotates per player input
 const CAMERA_TARGET_SPEED := 15.0 # the speed the camera rotates to a target
 const CHARACTER_ROTATION_SPEED := 5.0 # the speed the player character rotates
 const MOVEMENT_SPEED := 6.0 # the speed the player character moves
-const BOOST_RATE := 2.0 # the multiplier on movement speed when boosting (sprinting)
+const BOOST_RATE := 1.5 # the multiplier on movement speed when boosting (sprinting)
 const DODGE_RATE := 1.5 # the multipler on movement speed when dodging (rolling)
 const TARGET_MAX_DISTANCE := 15.0 # max positional distance an enemy can be to be targetted
+@export var max_health: int = 12
+@export var current_health: int = 12
 
 # state
 var committed := false # whether the player is currently commited to a movement option or not (attacking, dodging, etc.)

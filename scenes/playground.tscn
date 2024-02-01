@@ -1,9 +1,12 @@
-[gd_scene load_steps=16 format=3 uid="uid://cxn7ypxt877hx"]
+[gd_scene load_steps=19 format=3 uid="uid://cxn7ypxt877hx"]
 
 [ext_resource type="PackedScene" uid="uid://bmofdg6b4fvyo" path="res://objects/player.tscn" id="1_nfl6y"]
+[ext_resource type="Script" path="res://scripts/hud.gd" id="1_tqbut"]
 [ext_resource type="Texture2D" uid="uid://d1qtqslkxnoe5" path="res://assets/fonts/inputs/kenny_input-prompts/Keyboard & Mouse/Vector/keyboard_shift_outline.svg" id="2_ajsgb"]
 [ext_resource type="FontFile" uid="uid://drlr7yk0j752a" path="res://assets/fonts/Bitstream-Vera-Sans/Vera.ttf" id="2_hu44g"]
+[ext_resource type="PackedScene" uid="uid://bcnxqq4asb8ls" path="res://objects/ui/heart_icon.tscn" id="2_v1m56"]
 [ext_resource type="Texture2D" uid="uid://cx5xq8ud4idhp" path="res://assets/fonts/inputs/kenny_input-prompts/Keyboard & Mouse/Vector/keyboard_space_outline.svg" id="3_d8vot"]
+[ext_resource type="PackedScene" uid="uid://b82l10numq21q" path="res://objects/ui/heart_icon_empty.tscn" id="3_lh3tt"]
 [ext_resource type="Script" path="res://scripts/input_hint.gd" id="4_4xjeh"]
 [ext_resource type="Texture2D" uid="uid://db01uu0pap6v6" path="res://assets/fonts/inputs/kenny_input-prompts/Keyboard & Mouse/Vector/keyboard_shift.svg" id="5_27aqq"]
 [ext_resource type="Texture2D" uid="uid://cnmfmabe2au5h" path="res://assets/fonts/inputs/kenny_input-prompts/Keyboard & Mouse/Vector/mouse_left_outline.svg" id="5_yn82w"]
@@ -41,6 +44,9 @@ offset_top = 5.0
 offset_bottom = 5.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_tqbut")
+heart_icon = ExtResource("2_v1m56")
+heart_empty_icon = ExtResource("3_lh3tt")
 
 [node name="Input Hints" type="Label" parent="HUD"]
 layout_mode = 1
@@ -118,6 +124,24 @@ script = ExtResource("4_4xjeh")
 action_name = "ui_page_left"
 pressed_texture = ExtResource("15_cbjgl")
 
+[node name="MaxHearts" type="HBoxContainer" parent="HUD"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 8.0
+offset_right = 488.0
+offset_bottom = 480.0
+scale = Vector2(0.1, 0.1)
+theme_override_constants/separation = 5
+
+[node name="CurrentHearts" type="HBoxContainer" parent="HUD"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 8.0
+offset_right = 488.0
+offset_bottom = 480.0
+scale = Vector2(0.1, 0.1)
+theme_override_constants/separation = 5
+
 [node name="Level" type="Node3D" parent="."]
 
 [node name="CSGBox3D" type="CSGBox3D" parent="Level"]
@@ -133,6 +157,7 @@ size = Vector3(2, 2, 2)
 [node name="Entities" type="Node" parent="."]
 
 [node name="Player" parent="Entities" instance=ExtResource("1_nfl6y")]
+unique_name_in_owner = true
 
 [node name="Dummy" parent="Entities" instance=ExtResource("14_qb73y")]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0, 5)
