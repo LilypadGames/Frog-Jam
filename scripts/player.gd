@@ -1,6 +1,9 @@
 class_name Player
 extends CharacterBody3D
 
+# signals
+signal inventory_updated
+
 # references
 @export_category("References")
 @onready var camera_origin: Node3D = %CameraOrigin
@@ -26,6 +29,7 @@ const TARGET_MAX_DISTANCE := 15.0 # max positional distance an enemy can be to b
 var committed := false # whether the player is currently commited to a movement option or not (attacking, dodging, etc.)
 var targeted: Enemy # the currently targeted object
 var dodge_direction: Vector3 # the direction of the current dodge roll
+var inventory: Dictionary = {}
 
 func _physics_process(delta) -> void:
 	# camera
@@ -265,6 +269,17 @@ func handle_animation(delta: float, direction: Vector3) -> void:
 			# set animation
 			if animation.current_animation != "player_anims/Idle":
 				animation.play("player_anims/Idle")
+
+# called when player picks up an item
+func on_pickup(item_id: String, amount: int = 1) -> void:
+	# add item to inventory
+	if inventory.has(item_id):
+		inventory[item_id] = inventory[item_id] + amount
+	else:
+		inventory[item_id] = amount
+
+	# signal that player inventory has been changes
+	inventory_updated.emit()
 
 # called when an animation completes
 func _on_animation_player_animation_finished(_anim_name: String) -> void:

@@ -1,9 +1,9 @@
-[gd_scene load_steps=16 format=3 uid="uid://c323s5f3calyp"]
+[gd_scene load_steps=21 format=3 uid="uid://c323s5f3calyp"]
 
 [ext_resource type="Script" path="res://scripts/hud.gd" id="1_2kwb5"]
 [ext_resource type="PackedScene" uid="uid://bcnxqq4asb8ls" path="res://objects/ui/heart_icon.tscn" id="2_ny352"]
 [ext_resource type="PackedScene" uid="uid://b82l10numq21q" path="res://objects/ui/heart_icon_empty.tscn" id="3_6mmjb"]
-[ext_resource type="FontFile" uid="uid://drlr7yk0j752a" path="res://assets/fonts/Bitstream-Vera-Sans/Vera.ttf" id="4_5ct6p"]
+[ext_resource type="FontFile" uid="uid://dr1vaa70et4rd" path="res://assets/fonts/Bitstream-Vera-Sans/Vera-Bold.ttf" id="4_4huet"]
 [ext_resource type="Texture2D" uid="uid://d1qtqslkxnoe5" path="res://assets/fonts/inputs/kenny_input-prompts/Keyboard & Mouse/Vector/keyboard_shift_outline.svg" id="5_5jjjg"]
 [ext_resource type="Script" path="res://scripts/input_hint.gd" id="6_r4gcw"]
 [ext_resource type="Texture2D" uid="uid://db01uu0pap6v6" path="res://assets/fonts/inputs/kenny_input-prompts/Keyboard & Mouse/Vector/keyboard_shift.svg" id="7_2rwci"]
@@ -15,6 +15,29 @@
 [ext_resource type="Texture2D" uid="uid://bq2oxaojw1ve0" path="res://assets/fonts/inputs/kenny_input-prompts/Keyboard & Mouse/Vector/keyboard_e.svg" id="13_dgrga"]
 [ext_resource type="Texture2D" uid="uid://njkj22cnrnuh" path="res://assets/fonts/inputs/kenny_input-prompts/Keyboard & Mouse/Vector/keyboard_q_outline.svg" id="14_uyr8t"]
 [ext_resource type="Texture2D" uid="uid://ct1tt3s7c5r01" path="res://assets/fonts/inputs/kenny_input-prompts/Keyboard & Mouse/Vector/keyboard_q.svg" id="15_3vybm"]
+
+[sub_resource type="Gradient" id="Gradient_la4ci"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0, 0.77809, 1)
+colors = PackedColorArray(0.92549, 0.92549, 0.92549, 0, 1, 1, 1, 0.454902, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_0j0so"]
+gradient = SubResource("Gradient_la4ci")
+width = 128
+height = 128
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.955, 0.515)
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_ruxnt"]
+viewport_path = NodePath("Inventory Viewport")
+
+[sub_resource type="Environment" id="Environment_q1hdx"]
+ambient_light_source = 2
+ambient_light_color = Color(1, 1, 1, 1)
+
+[sub_resource type="World3D" id="World3D_vimwv"]
+environment = SubResource("Environment_q1hdx")
 
 [node name="HUD" type="Control"]
 layout_mode = 3
@@ -40,9 +63,11 @@ offset_left = -117.0
 offset_top = -279.0
 grow_horizontal = 0
 grow_vertical = 0
-theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.34902)
+theme_override_constants/outline_size = 6
 theme_override_constants/line_spacing = 0
-theme_override_fonts/font = ExtResource("4_5ct6p")
+theme_override_fonts/font = ExtResource("4_4huet")
 theme_override_font_sizes/font_size = 20
 text = "Sprint
 
@@ -58,7 +83,7 @@ Camera"
 [node name="Input Icons" type="CanvasGroup" parent="Input Hints"]
 
 [node name="Sprint" type="Sprite2D" parent="Input Hints/Input Icons"]
-modulate = Color(0, 0, 0, 1)
+modulate = Color(0, 0, 0, 0.34902)
 position = Vector2(-33, 13)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("5_5jjjg")
@@ -67,7 +92,7 @@ action_name = "boost"
 pressed_texture = ExtResource("7_2rwci")
 
 [node name="Dodge" type="Sprite2D" parent="Input Hints/Input Icons"]
-modulate = Color(0, 0, 0, 1)
+modulate = Color(0, 0, 0, 0.34902)
 position = Vector2(-33, 61)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("8_m05qx")
@@ -76,19 +101,19 @@ action_name = "dodge"
 pressed_texture = ExtResource("9_8fd3e")
 
 [node name="Attack" type="Sprite2D" parent="Input Hints/Input Icons"]
-modulate = Color(0, 0, 0, 1)
+modulate = Color(0, 0, 0, 0.34902)
 position = Vector2(-33, 108)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("10_5d6xw")
 
 [node name="Target" type="Sprite2D" parent="Input Hints/Input Icons"]
-modulate = Color(0, 0, 0, 1)
+modulate = Color(0, 0, 0, 0.34902)
 position = Vector2(-33, 157)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("11_apuvg")
 
 [node name="Rotate Right" type="Sprite2D" parent="Input Hints/Input Icons"]
-modulate = Color(0, 0, 0, 1)
+modulate = Color(0, 0, 0, 0.34902)
 position = Vector2(-33, 215.6)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("12_emyww")
@@ -97,8 +122,8 @@ action_name = "ui_page_right"
 pressed_texture = ExtResource("13_dgrga")
 
 [node name="Rotate Left" type="Sprite2D" parent="Input Hints/Input Icons"]
-modulate = Color(0, 0, 0, 1)
-position = Vector2(-74.4, 215.6)
+modulate = Color(0, 0, 0, 0.34902)
+position = Vector2(-74, 216)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("14_uyr8t")
 script = ExtResource("6_r4gcw")
@@ -122,3 +147,61 @@ offset_right = 488.0
 offset_bottom = 480.0
 scale = Vector2(0.1, 0.1)
 theme_override_constants/separation = 5
+
+[node name="Inventory" type="Control" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Inventory Item Background" type="Sprite2D" parent="Inventory"]
+position = Vector2(0, -118)
+texture = SubResource("GradientTexture2D_0j0so")
+
+[node name="Inventory View 2D" type="Sprite2D" parent="Inventory"]
+scale = Vector2(0.6, 0.6)
+texture = SubResource("ViewportTexture_ruxnt")
+
+[node name="InventoryItemAmount" type="Label" parent="Inventory"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -16.0
+offset_top = -86.0
+offset_right = 94.0
+offset_bottom = -61.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.34902)
+theme_override_constants/outline_size = 6
+theme_override_fonts/font = ExtResource("4_4huet")
+theme_override_font_sizes/font_size = 21
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Inventory Viewport" type="SubViewport" parent="."]
+world_3d = SubResource("World3D_vimwv")
+transparent_bg = true
+size = Vector2i(1024, 1024)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Inventory Viewport"]
+
+[node name="Camera3D" type="Camera3D" parent="Inventory Viewport"]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0.7, -2)
+fov = 100.0
+
+[node name="InventoryItems" type="Node" parent="Inventory Viewport"]
+unique_name_in_owner = true
+
+[node name="InventoryItemsOrigin" type="Node3D" parent="Inventory Viewport"]
+unique_name_in_owner = true
