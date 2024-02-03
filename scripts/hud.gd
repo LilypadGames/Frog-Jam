@@ -2,7 +2,7 @@ extends Control
 
 # references
 @export_category("References")
-@onready var player: Player = %Player
+@export var player: Player
 @export var heart_icon: PackedScene
 @export var heart_empty_icon: PackedScene
 @onready var current_hearts: HBoxContainer = %CurrentHearts

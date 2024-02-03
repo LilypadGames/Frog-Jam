@@ -14,7 +14,8 @@
 
 [node name="World" parent="." instance=ExtResource("2_txc7o")]
 
-[node name="HUD" parent="." instance=ExtResource("3_ik6sl")]
+[node name="HUD" parent="." node_paths=PackedStringArray("player") instance=ExtResource("3_ik6sl")]
+player = NodePath("../Entities/Player")
 
 [node name="Level" type="Node3D" parent="."]
 
