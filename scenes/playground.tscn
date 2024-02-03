@@ -1,5 +1,6 @@
-[gd_scene load_steps=19 format=3 uid="uid://cxn7ypxt877hx"]
+[gd_scene load_steps=22 format=3 uid="uid://cxn7ypxt877hx"]
 
+[ext_resource type="PackedScene" uid="uid://ch2pif81btlnp" path="res://internal/audio.tscn" id="1_e733y"]
 [ext_resource type="PackedScene" uid="uid://bmofdg6b4fvyo" path="res://objects/player.tscn" id="1_nfl6y"]
 [ext_resource type="Script" path="res://scripts/hud.gd" id="1_tqbut"]
 [ext_resource type="Texture2D" uid="uid://d1qtqslkxnoe5" path="res://assets/fonts/inputs/kenny_input-prompts/Keyboard & Mouse/Vector/keyboard_shift_outline.svg" id="2_ajsgb"]
@@ -17,6 +18,8 @@
 [ext_resource type="Texture2D" uid="uid://bq2oxaojw1ve0" path="res://assets/fonts/inputs/kenny_input-prompts/Keyboard & Mouse/Vector/keyboard_e.svg" id="13_ojkla"]
 [ext_resource type="PackedScene" uid="uid://dkq2dc1ca6ya1" path="res://objects/dummy.tscn" id="14_qb73y"]
 [ext_resource type="Texture2D" uid="uid://ct1tt3s7c5r01" path="res://assets/fonts/inputs/kenny_input-prompts/Keyboard & Mouse/Vector/keyboard_q.svg" id="15_cbjgl"]
+[ext_resource type="PackedScene" uid="uid://cfvxsm1rtbwwq" path="res://objects/fiji_water.tscn" id="18_tebc0"]
+[ext_resource type="PackedScene" uid="uid://cvipuatms0jqk" path="res://objects/weed.tscn" id="19_a8o3n"]
 
 [sub_resource type="Environment" id="Environment_l5m1y"]
 background_mode = 1
@@ -25,6 +28,8 @@ ambient_light_source = 2
 ambient_light_color = Color(0.858824, 0.858824, 0.858824, 1)
 
 [node name="Playground" type="Node3D"]
+
+[node name="Audio" parent="." instance=ExtResource("1_e733y")]
 
 [node name="World" type="Node" parent="."]
 
@@ -161,3 +166,11 @@ unique_name_in_owner = true
 
 [node name="Dummy" parent="Entities" instance=ExtResource("14_qb73y")]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0, 5)
+
+[node name="Items" type="Node" parent="."]
+
+[node name="Fiji Water" parent="Items" instance=ExtResource("18_tebc0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.8, 0, 3)
+
+[node name="Weed" parent="Items" instance=ExtResource("19_a8o3n")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.8, 0, 3)
