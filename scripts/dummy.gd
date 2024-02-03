@@ -13,6 +13,7 @@ func on_target_lock_end() -> void:
 
 func _on_hurtbox_area_entered(area: Area3D) -> void:
 	if area.is_in_group("Player Hitbox"):
+		animation_player.stop()
 		animation_player.play("dummy_anims/Hit")
 
 func _on_animation_player_animation_finished(_anim_name: String) -> void:
