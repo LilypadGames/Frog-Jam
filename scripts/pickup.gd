@@ -17,14 +17,15 @@ extends Node3D
 func _ready() -> void:
 	if inventory_view:
 		model.position.y = 0
+		animation_player.play("pickup_anims/Inventory Spin")
 
 	else:
-		animation_player.play("Spin")
+		animation_player.play("pickup_anims/Ground Spin")
 
 func _on_collision(body: Node3D) -> void:
 	if body is Player:
 		# play pickup anim
-		animation_player.play("Pickup")
+		animation_player.play("pickup_anims/Pickup")
 
 		# play pickup sound
 		SoundManager.play("Pickup", "pickup")

@@ -205,3 +205,8 @@ unique_name_in_owner = true
 
 [node name="InventoryItemsOrigin" type="Node3D" parent="Inventory Viewport"]
 unique_name_in_owner = true
+
+[node name="InventorySwitchCooldown" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 0.3
+one_shot = true

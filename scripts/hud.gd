@@ -16,10 +16,12 @@ const INVENTORY_ITEM_ROTATION_SPEED := 7.0
 @onready var inventory_items: Node = %InventoryItems
 @onready var inventory_items_origin: Node3D = %InventoryItemsOrigin
 @onready var inventory_item_amount: Label = %InventoryItemAmount
+@onready var inventory_switch_cooldown: Timer = %InventorySwitchCooldown
 
 # internal
 var inventory_item_distance: float
 var inventory_item_selected: int = 0
+var ignore_macos_scroll: bool = false
 @onready var new_inventory_items_origin_rotation: float = inventory_items_origin.global_position.z
 
 func _ready() -> void:
@@ -30,24 +32,33 @@ func _physics_process(delta: float) -> void:
 	# update inventory item positions
 	inventory_items_origin.global_rotation.z = lerp_angle(inventory_items_origin.global_rotation.z, new_inventory_items_origin_rotation, delta * INVENTORY_ITEM_ROTATION_SPEED)
 
-func _input(event: InputEvent):
+func _input(event: InputEvent) -> void:
 	# open/close inventory
 	if event.is_action_released("inventory"):
 		if inventory_view.visible: 
+			# close inventory
+			SoundManager.play("Inventory", "close")
 			inventory_view.visible = false
 		else:
+			# open inventory
+			SoundManager.play("Inventory", "open")
 			inventory_view.visible = true
 
-	# next/previous item in inventory
+	# next/previous item in inventory on macOS magic mouse/trackpad
+	elif event is InputEventPanGesture:
+		if ignore_macos_scroll and ceil(event.delta.y) == 0:
+			ignore_macos_scroll = false
+		if ignore_macos_scroll:
+			return
+		if ceil(event.delta.y) > 0:
+			ignore_macos_scroll = true
+			switch_inventory_item(1)
+		elif ceil(event.delta.y) < 0:
+			ignore_macos_scroll = true
+			switch_inventory_item(-1)
+
+	# next/previous item in inventory on anything else
 	elif event.is_action_released("ui_page_up") or event.is_action_released("ui_page_down"):
-		# inventory isnt currently open
-		if inventory_view.visible == false:
-			return
-
-		# only one item
-		if player.inventory.size() == 0:
-			return
-
 		# next
 		var item_change := 1
 
@@ -55,11 +66,33 @@ func _input(event: InputEvent):
 		if event.is_action_released("ui_page_down"):
 			item_change = -1
 
+		# switch inventory item
+		switch_inventory_item(item_change)
+
+func switch_inventory_item(item_change: int) -> void:
+		# cooldown
+		if not inventory_switch_cooldown.is_stopped():
+			return
+
+		# inventory isnt currently open
+		if inventory_view.visible == false:
+			return
+
+		# only one item
+		if not player.inventory.size() > 1:
+			return
+
+		# start cooldown timer
+		inventory_switch_cooldown.start()
+
 		# apply new rotation
 		new_inventory_items_origin_rotation += item_change * deg_to_rad(inventory_item_distance)
 
 		# change current selected item
 		inventory_item_selected = wrap(inventory_item_selected + item_change, 0, player.inventory.size())
+
+		# play sound
+		SoundManager.play("Inventory", "switch")
 
 		# update label
 		inventory_item_amount.text = str(player.inventory[inventory_items.get_child(inventory_item_selected).name])
