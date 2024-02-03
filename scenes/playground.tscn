@@ -1,151 +1,20 @@
-[gd_scene load_steps=22 format=3 uid="uid://cxn7ypxt877hx"]
+[gd_scene load_steps=8 format=3 uid="uid://cxn7ypxt877hx"]
 
 [ext_resource type="PackedScene" uid="uid://ch2pif81btlnp" path="res://internal/audio.tscn" id="1_e733y"]
 [ext_resource type="PackedScene" uid="uid://bmofdg6b4fvyo" path="res://objects/player.tscn" id="1_nfl6y"]
-[ext_resource type="Script" path="res://scripts/hud.gd" id="1_tqbut"]
-[ext_resource type="Texture2D" uid="uid://d1qtqslkxnoe5" path="res://assets/fonts/inputs/kenny_input-prompts/Keyboard & Mouse/Vector/keyboard_shift_outline.svg" id="2_ajsgb"]
-[ext_resource type="FontFile" uid="uid://drlr7yk0j752a" path="res://assets/fonts/Bitstream-Vera-Sans/Vera.ttf" id="2_hu44g"]
-[ext_resource type="PackedScene" uid="uid://bcnxqq4asb8ls" path="res://objects/ui/heart_icon.tscn" id="2_v1m56"]
-[ext_resource type="Texture2D" uid="uid://cx5xq8ud4idhp" path="res://assets/fonts/inputs/kenny_input-prompts/Keyboard & Mouse/Vector/keyboard_space_outline.svg" id="3_d8vot"]
-[ext_resource type="PackedScene" uid="uid://b82l10numq21q" path="res://objects/ui/heart_icon_empty.tscn" id="3_lh3tt"]
-[ext_resource type="Script" path="res://scripts/input_hint.gd" id="4_4xjeh"]
-[ext_resource type="Texture2D" uid="uid://db01uu0pap6v6" path="res://assets/fonts/inputs/kenny_input-prompts/Keyboard & Mouse/Vector/keyboard_shift.svg" id="5_27aqq"]
-[ext_resource type="Texture2D" uid="uid://cnmfmabe2au5h" path="res://assets/fonts/inputs/kenny_input-prompts/Keyboard & Mouse/Vector/mouse_left_outline.svg" id="5_yn82w"]
-[ext_resource type="Texture2D" uid="uid://cqvwnqxjqtwvq" path="res://assets/fonts/inputs/kenny_input-prompts/Keyboard & Mouse/Vector/mouse_right_outline.svg" id="6_gx7b2"]
-[ext_resource type="Texture2D" uid="uid://dpft24cc82hxn" path="res://assets/fonts/inputs/kenny_input-prompts/Keyboard & Mouse/Vector/keyboard_e_outline.svg" id="7_nxf7p"]
-[ext_resource type="Texture2D" uid="uid://cwdggpwcri67n" path="res://assets/fonts/inputs/kenny_input-prompts/Keyboard & Mouse/Vector/keyboard_space.svg" id="7_xa4oj"]
-[ext_resource type="Texture2D" uid="uid://njkj22cnrnuh" path="res://assets/fonts/inputs/kenny_input-prompts/Keyboard & Mouse/Vector/keyboard_q_outline.svg" id="8_k0obc"]
-[ext_resource type="Texture2D" uid="uid://bq2oxaojw1ve0" path="res://assets/fonts/inputs/kenny_input-prompts/Keyboard & Mouse/Vector/keyboard_e.svg" id="13_ojkla"]
+[ext_resource type="PackedScene" uid="uid://bo53ah4v3nc0e" path="res://internal/world.tscn" id="2_txc7o"]
+[ext_resource type="PackedScene" uid="uid://c323s5f3calyp" path="res://internal/hud.tscn" id="3_ik6sl"]
 [ext_resource type="PackedScene" uid="uid://dkq2dc1ca6ya1" path="res://objects/dummy.tscn" id="14_qb73y"]
-[ext_resource type="Texture2D" uid="uid://ct1tt3s7c5r01" path="res://assets/fonts/inputs/kenny_input-prompts/Keyboard & Mouse/Vector/keyboard_q.svg" id="15_cbjgl"]
 [ext_resource type="PackedScene" uid="uid://cfvxsm1rtbwwq" path="res://objects/fiji_water.tscn" id="18_tebc0"]
 [ext_resource type="PackedScene" uid="uid://cvipuatms0jqk" path="res://objects/weed.tscn" id="19_a8o3n"]
-
-[sub_resource type="Environment" id="Environment_l5m1y"]
-background_mode = 1
-background_color = Color(0.552941, 0.933333, 0.933333, 1)
-ambient_light_source = 2
-ambient_light_color = Color(0.858824, 0.858824, 0.858824, 1)
 
 [node name="Playground" type="Node3D"]
 
 [node name="Audio" parent="." instance=ExtResource("1_e733y")]
 
-[node name="World" type="Node" parent="."]
+[node name="World" parent="." instance=ExtResource("2_txc7o")]
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="World"]
-environment = SubResource("Environment_l5m1y")
-
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="World"]
-transform = Transform3D(0.70183, 0.599325, 0.385026, 0, -0.540505, 0.841341, 0.712345, -0.590478, -0.379342, 0, 0, 0)
-shadow_enabled = true
-
-[node name="HUD" type="Control" parent="."]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = 5.0
-offset_bottom = 5.0
-grow_horizontal = 2
-grow_vertical = 2
-script = ExtResource("1_tqbut")
-heart_icon = ExtResource("2_v1m56")
-heart_empty_icon = ExtResource("3_lh3tt")
-
-[node name="Input Hints" type="Label" parent="HUD"]
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -117.0
-offset_top = -279.0
-grow_horizontal = 0
-grow_vertical = 0
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_constants/line_spacing = 0
-theme_override_fonts/font = ExtResource("2_hu44g")
-theme_override_font_sizes/font_size = 20
-text = "Sprint
-
-Dodge
-
-Attack
-
-Target
-
-Rotate
-Camera"
-
-[node name="Input Icons" type="CanvasGroup" parent="HUD/Input Hints"]
-
-[node name="Sprint" type="Sprite2D" parent="HUD/Input Hints/Input Icons"]
-modulate = Color(0, 0, 0, 1)
-position = Vector2(-33, 13)
-scale = Vector2(0.8, 0.8)
-texture = ExtResource("2_ajsgb")
-script = ExtResource("4_4xjeh")
-action_name = "boost"
-pressed_texture = ExtResource("5_27aqq")
-
-[node name="Dodge" type="Sprite2D" parent="HUD/Input Hints/Input Icons"]
-modulate = Color(0, 0, 0, 1)
-position = Vector2(-33, 61)
-scale = Vector2(0.8, 0.8)
-texture = ExtResource("3_d8vot")
-script = ExtResource("4_4xjeh")
-action_name = "dodge"
-pressed_texture = ExtResource("7_xa4oj")
-
-[node name="Attack" type="Sprite2D" parent="HUD/Input Hints/Input Icons"]
-modulate = Color(0, 0, 0, 1)
-position = Vector2(-33, 108)
-scale = Vector2(0.8, 0.8)
-texture = ExtResource("5_yn82w")
-
-[node name="Target" type="Sprite2D" parent="HUD/Input Hints/Input Icons"]
-modulate = Color(0, 0, 0, 1)
-position = Vector2(-33, 157)
-scale = Vector2(0.8, 0.8)
-texture = ExtResource("6_gx7b2")
-
-[node name="Rotate Right" type="Sprite2D" parent="HUD/Input Hints/Input Icons"]
-modulate = Color(0, 0, 0, 1)
-position = Vector2(-33, 215.6)
-scale = Vector2(0.8, 0.8)
-texture = ExtResource("7_nxf7p")
-script = ExtResource("4_4xjeh")
-action_name = "ui_page_right"
-pressed_texture = ExtResource("13_ojkla")
-
-[node name="Rotate Left" type="Sprite2D" parent="HUD/Input Hints/Input Icons"]
-modulate = Color(0, 0, 0, 1)
-position = Vector2(-74.4, 215.6)
-scale = Vector2(0.8, 0.8)
-texture = ExtResource("8_k0obc")
-script = ExtResource("4_4xjeh")
-action_name = "ui_page_left"
-pressed_texture = ExtResource("15_cbjgl")
-
-[node name="MaxHearts" type="HBoxContainer" parent="HUD"]
-unique_name_in_owner = true
-layout_mode = 0
-offset_left = 8.0
-offset_right = 488.0
-offset_bottom = 480.0
-scale = Vector2(0.1, 0.1)
-theme_override_constants/separation = 5
-
-[node name="CurrentHearts" type="HBoxContainer" parent="HUD"]
-unique_name_in_owner = true
-layout_mode = 0
-offset_left = 8.0
-offset_right = 488.0
-offset_bottom = 480.0
-scale = Vector2(0.1, 0.1)
-theme_override_constants/separation = 5
+[node name="HUD" parent="." instance=ExtResource("3_ik6sl")]
 
 [node name="Level" type="Node3D" parent="."]
 
