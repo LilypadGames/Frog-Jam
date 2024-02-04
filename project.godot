@@ -17,8 +17,8 @@ config/icon="res://icon.svg"
 
 [audio]
 
-manager/sound/pool_1D_size=4
-manager/sound/pool_3D_size=4
+manager/sound/pool_1D_size=10
+manager/sound/pool_3D_size=10
 
 [autoload]
 

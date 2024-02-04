@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://c323s5f3calyp"]
+[gd_scene load_steps=23 format=3 uid="uid://c323s5f3calyp"]
 
 [ext_resource type="Script" path="res://scripts/hud.gd" id="1_2kwb5"]
 [ext_resource type="PackedScene" uid="uid://bcnxqq4asb8ls" path="res://objects/ui/heart_icon.tscn" id="2_ny352"]
@@ -15,6 +15,8 @@
 [ext_resource type="Texture2D" uid="uid://bq2oxaojw1ve0" path="res://assets/fonts/inputs/kenny_input-prompts/Keyboard & Mouse/Vector/keyboard_e.svg" id="13_dgrga"]
 [ext_resource type="Texture2D" uid="uid://njkj22cnrnuh" path="res://assets/fonts/inputs/kenny_input-prompts/Keyboard & Mouse/Vector/keyboard_q_outline.svg" id="14_uyr8t"]
 [ext_resource type="Texture2D" uid="uid://ct1tt3s7c5r01" path="res://assets/fonts/inputs/kenny_input-prompts/Keyboard & Mouse/Vector/keyboard_q.svg" id="15_3vybm"]
+[ext_resource type="PackedScene" uid="uid://cfvxsm1rtbwwq" path="res://objects/pickups/fiji_water.tscn" id="16_mbmdi"]
+[ext_resource type="PackedScene" uid="uid://cvipuatms0jqk" path="res://objects/pickups/weed.tscn" id="17_eul2y"]
 
 [sub_resource type="Gradient" id="Gradient_la4ci"]
 interpolation_mode = 1
@@ -202,6 +204,14 @@ fov = 100.0
 
 [node name="InventoryItems" type="Node" parent="Inventory Viewport"]
 unique_name_in_owner = true
+
+[node name="fiji_water" parent="Inventory Viewport/InventoryItems" instance=ExtResource("16_mbmdi")]
+visible = false
+inventory_view = true
+
+[node name="weed" parent="Inventory Viewport/InventoryItems" instance=ExtResource("17_eul2y")]
+visible = false
+inventory_view = true
 
 [node name="InventoryItemsOrigin" type="Node3D" parent="Inventory Viewport"]
 unique_name_in_owner = true

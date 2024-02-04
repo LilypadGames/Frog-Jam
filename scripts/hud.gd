@@ -168,17 +168,18 @@ func _on_player_inventory_updated():
 	# get new item count
 	var new_item_count = inventory.size()
 
-	# remove missing items in inventory HUD
+	# hide missing items in inventory HUD
 	for item in inventory_items.get_children():
 		# get item id
 		var item_id = (item as Pickup).item_id
 
 		if not inventory.has(item_id):
-			# remove item
-			item.queue_free()
+			# hide item
+			(item as Pickup).visible = false
 
 			# remove item position representation
-			inventory_items_origin.get_node(item_id).queue_free()
+			if inventory_items_origin.has_node(item_id):
+				inventory_items_origin.get_node(item_id).queue_free()
 
 	# clamp selected item index
 	inventory_item_selected = clamp(inventory_item_selected, 0, new_item_count - 1)
@@ -196,12 +197,10 @@ func _on_player_inventory_updated():
 
 	# add missing items from player inventory to inventory HUD
 	for item_id in inventory:
-		if not inventory_items.has_node(item_id):
-			# create new inventory representation of pickup item
-			var new_item: Pickup = load("res://objects/pickups/" + item_id + ".tscn").instantiate()
-			new_item.name = item_id
-			new_item.inventory_view = true
-			inventory_items.add_child(new_item)
+		if not inventory_items.get_node(item_id).visible:
+			# make item visible
+			var new_item: Pickup = inventory_items.get_node(item_id)
+			new_item.visible = true
 
 			# setup position representation
 			var new_item_position_representation: RemoteTransform3D = RemoteTransform3D.new()
