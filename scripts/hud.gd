@@ -24,7 +24,7 @@ const INVENTORY_ITEM_ROTATION_SPEED := 7.0
 
 # internal
 var inventory_item_distance: float
-var inventory_item_selected: int = 0
+var inventory_item_selected_index: int = 0
 var ignore_macos_scroll: bool = false
 @onready var new_inventory_items_origin_rotation: float = inventory_items_origin.global_position.z
 
@@ -105,12 +105,12 @@ func _on_player_inventory_updated():
 				inventory_items_origin.get_node(item_id).queue_free()
 
 	# clamp selected item index
-	inventory_item_selected = clamp(inventory_item_selected, 0, new_item_count - 1)
+	inventory_item_selected_index = clamp(inventory_item_selected_index, 0, new_item_count - 1)
 
 	# no items left
 	if new_item_count == 0:
 		# set selected item to 0
-		inventory_item_selected = 0
+		inventory_item_selected_index = 0
 
 		# clear item labels
 		clear_selected_item_info()
@@ -131,6 +131,7 @@ func _on_player_inventory_updated():
 			new_item_position_representation.remote_path = new_item.get_path()
 			new_item_position_representation.update_rotation = false
 			new_item_position_representation.update_scale = false
+			new_item_position_representation.set_meta("item_id", item_id)
 			inventory_items_origin.add_child(new_item_position_representation)
 
 	# spread items along circle evenly, if there are new items
@@ -170,7 +171,7 @@ func switch_inventory_item(item_change: int) -> void:
 		new_inventory_items_origin_rotation += item_change * deg_to_rad(inventory_item_distance)
 
 		# change current selected item
-		inventory_item_selected = wrap(inventory_item_selected + item_change, 0, player.inventory.size())
+		inventory_item_selected_index = wrap(inventory_item_selected_index + item_change, 0, player.inventory.size())
 
 		# play sound
 		SoundManager.play("Inventory", "switch")
@@ -180,7 +181,7 @@ func switch_inventory_item(item_change: int) -> void:
 
 func update_selected_item_info() -> void:
 	# get item ID
-	var item_id = inventory_items.get_child(inventory_item_selected).name
+	var item_id = inventory_items_origin.get_child(inventory_item_selected_index).get_meta("item_id")
 
 	# amount
 	inventory_item_amount.text = str(player.inventory[item_id])
