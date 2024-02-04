@@ -152,7 +152,6 @@ theme_override_constants/separation = 5
 
 [node name="Inventory" type="Control" parent="."]
 unique_name_in_owner = true
-visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -190,6 +189,50 @@ theme_override_fonts/font = ExtResource("4_4huet")
 theme_override_font_sizes/font_size = 21
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="InventoryItemName" type="Label" parent="Inventory"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -190.5
+offset_top = -45.5
+offset_right = 190.5
+offset_bottom = -18.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.34902)
+theme_override_constants/outline_size = 6
+theme_override_fonts/font = ExtResource("4_4huet")
+theme_override_font_sizes/font_size = 22
+horizontal_alignment = 1
+
+[node name="InventoryItemDescription" type="Label" parent="Inventory"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -113.5
+offset_top = -10.5
+offset_right = 113.5
+offset_bottom = 106.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.933333, 0.933333, 0.933333, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.34902)
+theme_override_constants/outline_size = 6
+theme_override_fonts/font = ExtResource("4_4huet")
+theme_override_font_sizes/font_size = 16
+horizontal_alignment = 1
+autowrap_mode = 3
+clip_text = true
 
 [node name="Inventory Viewport" type="SubViewport" parent="."]
 world_3d = SubResource("World3D_vimwv")

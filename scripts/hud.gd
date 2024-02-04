@@ -15,8 +15,10 @@ const INVENTORY_ITEM_ROTATION_SPEED := 7.0
 @onready var inventory_view: Control = %Inventory
 @onready var inventory_items: Node = %InventoryItems
 @onready var inventory_items_origin: Node3D = %InventoryItemsOrigin
-@onready var inventory_item_amount: Label = %InventoryItemAmount
 @onready var inventory_switch_cooldown: Timer = %InventorySwitchCooldown
+@onready var inventory_item_amount: Label = %InventoryItemAmount
+@onready var inventory_item_name: Label = %InventoryItemName
+@onready var inventory_item_description: Label = %InventoryItemDescription
 
 # internal
 var inventory_item_distance: float
@@ -69,6 +71,75 @@ func _input(event: InputEvent) -> void:
 		# switch inventory item
 		switch_inventory_item(item_change)
 
+func _on_player_inventory_updated():
+	# get inventory
+	var inventory = player.inventory
+
+	# get current item amount
+	var item_count = inventory_items_origin.get_child_count()
+
+	# get new item count
+	var new_item_count = inventory.size()
+
+	# hide missing items in inventory HUD
+	for item in inventory_items.get_children():
+		# get item id
+		var item_id = (item as Pickup).item_id
+
+		if not inventory.has(item_id):
+			# hide item
+			(item as Pickup).visible = false
+
+			# remove item position representation
+			if inventory_items_origin.has_node(item_id):
+				inventory_items_origin.get_node(item_id).queue_free()
+
+	# clamp selected item index
+	inventory_item_selected = clamp(inventory_item_selected, 0, new_item_count - 1)
+
+	# no items left
+	if new_item_count == 0:
+		# set selected item to 0
+		inventory_item_selected = 0
+
+		# clear item labels
+		clear_selected_item_info()
+
+		# do not do anything else
+		return
+
+	# add missing items from player inventory to inventory HUD
+	for item_id in inventory:
+		if not inventory_items.get_node(item_id).visible:
+			# make item visible
+			var new_item: Pickup = inventory_items.get_node(item_id)
+			new_item.visible = true
+
+			# setup position representation
+			var new_item_position_representation: RemoteTransform3D = RemoteTransform3D.new()
+			new_item_position_representation.name = item_id
+			new_item_position_representation.remote_path = new_item.get_path()
+			new_item_position_representation.update_rotation = false
+			new_item_position_representation.update_scale = false
+			inventory_items_origin.add_child(new_item_position_representation)
+
+	# spread items along circle evenly, if there are new items
+	if item_count != new_item_count:
+		# calculate distance between items
+		inventory_item_distance = 360.0 / inventory.size()
+
+		# set item position representation position
+		var item_index = 0
+		for item_position_representation in inventory_items_origin.get_children():
+			# calculate position
+			item_position_representation.position = Vector3(INVENTORY_ITEM_RADIUS * sin(deg_to_rad(inventory_item_distance * item_index)), INVENTORY_ITEM_RADIUS * cos(deg_to_rad(inventory_item_distance * item_index)) ,0)
+
+			# next iteration
+			item_index += 1
+
+	# update item labels
+	update_selected_item_info()
+
 func switch_inventory_item(item_change: int) -> void:
 		# cooldown
 		if not inventory_switch_cooldown.is_stopped():
@@ -94,8 +165,31 @@ func switch_inventory_item(item_change: int) -> void:
 		# play sound
 		SoundManager.play("Inventory", "switch")
 
-		# update label
-		inventory_item_amount.text = str(player.inventory[inventory_items.get_child(inventory_item_selected).name])
+		# update item labels
+		update_selected_item_info()
+
+func update_selected_item_info() -> void:
+	# get item ID
+	var item_id = inventory_items.get_child(inventory_item_selected).name
+
+	# amount
+	inventory_item_amount.text = str(player.inventory[item_id])
+
+	# name
+	inventory_item_name.text = str(Cache.lang["en_us"]["item"][item_id]["name"])
+
+	# description
+	inventory_item_description.text = str(Cache.lang["en_us"]["item"][item_id]["description"])
+
+func clear_selected_item_info() -> void:
+	# amount
+	inventory_item_amount.text = ""
+
+	# name
+	inventory_item_name.text = ""
+
+	# description
+	inventory_item_description.text = ""
 
 func update_max_hearts() -> void:
 	# reset heart sprites
@@ -157,72 +251,3 @@ func update_current_hearts() -> void:
 			(heart as TextureProgressBar).value = 1
 		else:
 			(heart as TextureProgressBar).value = 0
-
-func _on_player_inventory_updated():
-	# get inventory
-	var inventory = player.inventory
-
-	# get current item amount
-	var item_count = inventory_items_origin.get_child_count()
-
-	# get new item count
-	var new_item_count = inventory.size()
-
-	# hide missing items in inventory HUD
-	for item in inventory_items.get_children():
-		# get item id
-		var item_id = (item as Pickup).item_id
-
-		if not inventory.has(item_id):
-			# hide item
-			(item as Pickup).visible = false
-
-			# remove item position representation
-			if inventory_items_origin.has_node(item_id):
-				inventory_items_origin.get_node(item_id).queue_free()
-
-	# clamp selected item index
-	inventory_item_selected = clamp(inventory_item_selected, 0, new_item_count - 1)
-
-	# no items left
-	if new_item_count == 0:
-		# set selected item to 0
-		inventory_item_selected = 0
-
-		# update items
-		inventory_item_amount.text = ""
-
-		# do not do anything else
-		return
-
-	# add missing items from player inventory to inventory HUD
-	for item_id in inventory:
-		if not inventory_items.get_node(item_id).visible:
-			# make item visible
-			var new_item: Pickup = inventory_items.get_node(item_id)
-			new_item.visible = true
-
-			# setup position representation
-			var new_item_position_representation: RemoteTransform3D = RemoteTransform3D.new()
-			new_item_position_representation.name = item_id
-			new_item_position_representation.remote_path = new_item.get_path()
-			new_item_position_representation.update_rotation = false
-			new_item_position_representation.update_scale = false
-			inventory_items_origin.add_child(new_item_position_representation)
-
-	# spread items along circle evenly, if there are new items
-	if item_count != new_item_count:
-		# calculate distance between items
-		inventory_item_distance = 360.0 / inventory.size()
-
-		# set item position representation position
-		var item_index = 0
-		for item_position_representation in inventory_items_origin.get_children():
-			# calculate position
-			item_position_representation.position = Vector3(INVENTORY_ITEM_RADIUS * sin(deg_to_rad(inventory_item_distance * item_index)), INVENTORY_ITEM_RADIUS * cos(deg_to_rad(inventory_item_distance * item_index)) ,0)
-
-			# next iteration
-			item_index += 1
-
-	# update item count label
-	inventory_item_amount.text = str(player.inventory[inventory_items.get_child(inventory_item_selected).name])

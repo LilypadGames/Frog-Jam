@@ -24,6 +24,7 @@ manager/sound/pool_3D_size=10
 
 SoundManager="*res://addons/resonate/sound_manager/sound_manager.gd"
 MusicManager="*res://addons/resonate/music_manager/music_manager.gd"
+Cache="*res://scripts/cache.gd"
 
 [editor_plugins]
 
