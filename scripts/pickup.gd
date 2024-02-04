@@ -14,6 +14,9 @@ extends Node3D
 @export_category("Options")
 @export var inventory_view: bool = false
 
+# internal
+var picked_up: bool = false
+
 func _ready() -> void:
 	if inventory_view:
 		model.position.y = 0
@@ -23,7 +26,11 @@ func _ready() -> void:
 		animation_player.play("pickup_anims/Ground Spin")
 
 func _on_collision(body: Node3D) -> void:
-	if body is Player:
+	# player interacted for the first time
+	if body is Player and picked_up == false:
+		# marked as picked up
+		picked_up = true
+
 		# play pickup anim
 		animation_player.play("pickup_anims/Pickup")
 
