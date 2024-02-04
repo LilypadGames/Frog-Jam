@@ -12,6 +12,8 @@ const INVENTORY_ITEM_ROTATION_SPEED := 7.0
 @export var heart_empty_icon: PackedScene
 @onready var current_hearts: HBoxContainer = %CurrentHearts
 @onready var max_hearts: HBoxContainer = %MaxHearts
+@onready var input_hints_general: Label = %GeneralHints
+@onready var input_hints_inventory: Label = %InventoryHints
 @onready var inventory_view: Control = %Inventory
 @onready var inventory_items: Node = %InventoryItems
 @onready var inventory_items_origin: Node3D = %InventoryItemsOrigin
@@ -41,10 +43,18 @@ func _input(event: InputEvent) -> void:
 			# close inventory
 			SoundManager.play("Inventory", "close")
 			inventory_view.visible = false
+
+			# show general hints
+			input_hints_general.visible = true
+			input_hints_inventory.visible = false
 		else:
 			# open inventory
 			SoundManager.play("Inventory", "open")
 			inventory_view.visible = true
+
+			# show inventory hints
+			input_hints_general.visible = false
+			input_hints_inventory.visible = true
 
 	# next/previous item in inventory on macOS magic mouse/trackpad
 	elif event is InputEventPanGesture:
