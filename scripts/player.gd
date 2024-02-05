@@ -11,6 +11,7 @@ signal inventory_updated
 @onready var hitbox_horizontal: Area3D = %HitboxHorizontal
 @onready var hitbox_vertical: Area3D = %HitboxVertical
 @onready var animation_controller: PlayerAnimController = %AnimationTree
+@onready var consume_timer: Timer = %ConsumeTimer
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 # properties
@@ -27,6 +28,7 @@ const TARGET_MAX_DISTANCE := 15.0 # max positional distance an enemy can be to b
 
 # state
 var committed := false # whether the player is currently commited to a movement option or not (attacking, dodging, etc.)
+var current_action: String = "" # the player's current async action (ex: consuming an item)
 var targeted: Enemy # the currently targeted object
 var dodge_direction: Vector3 # the direction of the current dodge roll
 var inventory: Dictionary = {}
@@ -133,6 +135,9 @@ func handle_attack() -> void:
 
 	# attack
 	if Input.is_action_pressed("attack"):
+		# end action
+		consume_end(true)
+
 		# stop velocity
 		velocity.x = 0
 		velocity.z = 0
@@ -150,6 +155,9 @@ func handle_dodge(direction: Vector3) -> void:
 
 	# dodge
 	if Input.is_action_just_pressed("dodge"):
+		# end action
+		consume_end(true)
+
 		# stop velocity
 		velocity.x = 0
 		velocity.z = 0
@@ -270,8 +278,52 @@ func on_pickup(item_id: String, amount: int = 1) -> void:
 	else:
 		inventory[item_id] = amount
 
-	# signal that player inventory has been changes
+	# signal that player inventory has been changed
 	inventory_updated.emit()
+
+# called when player consumes an item
+func consume_start(item_id: String) -> bool:
+	# currently committed
+	if committed:
+		return false
+
+	# currently performing action
+	if not current_action == "":
+		return false
+
+	# does not have enough
+	if inventory[item_id] <= 0:
+		return false
+
+	# remove one from inventory
+	inventory[item_id] -= 1
+
+	# signal that player inventory has been changed
+	inventory_updated.emit()
+
+	# set current action
+	current_action = "Consume"
+
+	# play consume anim
+	animation_controller.set_action(current_action)
+
+	# start consume timer
+	consume_timer.start()
+
+	# successfully started consuming
+	return true
+
+# called when player finishes consuming an item
+func consume_end(_premature: bool = false) -> void:
+	# not currently consuming
+	if current_action != "Consume":
+		return
+
+	# end consume anim
+	animation_controller.set_action(current_action, false)
+
+	# reset action
+	current_action = ""
 
 # called when player is attacking during attack animation
 func _on_start_hitbox(type: String) -> void:

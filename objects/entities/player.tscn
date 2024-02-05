@@ -1,4 +1,4 @@
-[gd_scene load_steps=38 format=3 uid="uid://bmofdg6b4fvyo"]
+[gd_scene load_steps=39 format=3 uid="uid://bmofdg6b4fvyo"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_qt7h5"]
 [ext_resource type="AnimationLibrary" uid="uid://cx4wxagcgf445" path="res://assets/animations/player_anims.res" id="2_w10qt"]
@@ -488,12 +488,14 @@ blend_point_5/node = SubResource("AnimationNodeAnimation_dmgmb")
 blend_point_5/pos = Vector2(0, 0)
 sync = true
 
+[sub_resource type="AnimationNodeTimeScale" id="AnimationNodeTimeScale_ob1xp"]
+
 [sub_resource type="AnimationNodeBlend2" id="AnimationNodeBlend2_43efm"]
 filter_enabled = true
 filters = ["%GeneralSkeleton:Chest", "%GeneralSkeleton:Head", "%GeneralSkeleton:Hips", "%GeneralSkeleton:LeftHand", "%GeneralSkeleton:LeftLowerArm", "%GeneralSkeleton:LeftMiddleIntermediate", "%GeneralSkeleton:LeftMiddleProximal", "%GeneralSkeleton:LeftShoulder", "%GeneralSkeleton:LeftThumbMetacarpal", "%GeneralSkeleton:LeftThumbProximal", "%GeneralSkeleton:LeftUpperArm", "%GeneralSkeleton:Neck", "%GeneralSkeleton:RightHand", "%GeneralSkeleton:RightLowerArm", "%GeneralSkeleton:RightMiddleIntermediate", "%GeneralSkeleton:RightMiddleProximal", "%GeneralSkeleton:RightShoulder", "%GeneralSkeleton:RightThumbMetacarpal", "%GeneralSkeleton:RightThumbProximal", "%GeneralSkeleton:RightUpperArm", "%GeneralSkeleton:Spine", "%GeneralSkeleton:UpperChest"]
 
 [sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_pvyvd"]
-graph_offset = Vector2(-513.203, 2.47651)
+graph_offset = Vector2(-708.469, 160.801)
 nodes/Action/node = SubResource("AnimationNodeTransition_ok58s")
 nodes/Action/position = Vector2(-140, 320)
 "nodes/Attack Jump/node" = SubResource("AnimationNodeAnimation_qfr7q")
@@ -509,7 +511,7 @@ nodes/Backflip/position = Vector2(220, 580)
 "nodes/Backflip Speed/node" = SubResource("AnimationNodeTimeScale_76608")
 "nodes/Backflip Speed/position" = Vector2(480, 560)
 nodes/Consume/node = SubResource("AnimationNodeAnimation_4qa60")
-nodes/Consume/position = Vector2(-400, 340)
+nodes/Consume/position = Vector2(-520, 340)
 "nodes/General Movement/node" = SubResource("AnimationNodeBlendSpace1D_extsp")
 "nodes/General Movement/position" = Vector2(-540, -40)
 nodes/Movement/node = SubResource("AnimationNodeTransition_ivnqy")
@@ -524,10 +526,12 @@ nodes/Roll/position = Vector2(260, 300)
 "nodes/Roll Speed/position" = Vector2(480, 280)
 "nodes/Targeting Movement/node" = SubResource("AnimationNodeBlendSpace2D_woptx")
 "nodes/Targeting Movement/position" = Vector2(-560, 120)
+nodes/TimeScale/node = SubResource("AnimationNodeTimeScale_ob1xp")
+nodes/TimeScale/position = Vector2(-280, 340)
 "nodes/Upper Body Action/node" = SubResource("AnimationNodeBlend2_43efm")
 "nodes/Upper Body Action/position" = Vector2(40, 140)
 nodes/output/position = Vector2(920, 120)
-node_connections = [&"Action", 0, &"Consume", &"Attack Jump Speed", 0, &"Attack Jump", &"Attack Slash Speed", 0, &"Attack Slash", &"Backflip Speed", 0, &"Backflip", &"Movement", 0, &"General Movement", &"Movement", 1, &"Targeting Movement", &"Movement Speed", 0, &"Movement", &"Output", 0, &"Upper Body Action", &"Output", 1, &"Roll Speed", &"Output", 2, &"Attack Jump Speed", &"Output", 3, &"Backflip Speed", &"Output", 4, &"Attack Slash Speed", &"Roll Speed", 0, &"Roll", &"Upper Body Action", 0, &"Movement Speed", &"Upper Body Action", 1, &"Action", &"output", 0, &"Output"]
+node_connections = [&"Action", 0, &"TimeScale", &"Attack Jump Speed", 0, &"Attack Jump", &"Attack Slash Speed", 0, &"Attack Slash", &"Backflip Speed", 0, &"Backflip", &"Movement", 0, &"General Movement", &"Movement", 1, &"Targeting Movement", &"Movement Speed", 0, &"Movement", &"Output", 0, &"Upper Body Action", &"Output", 1, &"Roll Speed", &"Output", 2, &"Attack Jump Speed", &"Output", 3, &"Backflip Speed", &"Output", 4, &"Attack Slash Speed", &"Roll Speed", 0, &"Roll", &"TimeScale", 0, &"Consume", &"Upper Body Action", 0, &"Movement Speed", &"Upper Body Action", 1, &"Action", &"output", 0, &"Output"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_g6c7l"]
 radius = 0.349456
@@ -852,6 +856,7 @@ parameters/Output/transition_request = ""
 parameters/Output/current_index = 0
 "parameters/Roll Speed/scale" = 2.0
 "parameters/Targeting Movement/blend_position" = Vector2(0, 0)
+parameters/TimeScale/scale = 5.0
 "parameters/Upper Body Action/blend_amount" = 0.0
 script = ExtResource("3_sqho8")
 
@@ -869,4 +874,9 @@ transform = Transform3D(-1, -3.69465e-08, 7.92319e-08, 0, 0.906308, 0.422618, -8
 
 [node name="AudioListener3D" type="AudioListener3D" parent="CameraOrigin/Camera"]
 
+[node name="ConsumeTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 3.0
+
 [connection signal="animation_finished" from="Character/AnimationTree" to="." method="_on_animation_finished"]
+[connection signal="timeout" from="ConsumeTimer" to="." method="consume_end"]

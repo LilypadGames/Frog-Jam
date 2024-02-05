@@ -81,6 +81,16 @@ func _input(event: InputEvent) -> void:
 
 		# switch inventory item
 		switch_inventory_item(item_change)
+	
+	# consume item
+	elif inventory_view.visible and inventory_items_origin.get_child_count() > 0 and Input.is_action_just_released("interact"):
+		# attempt to consume
+		var success = player.consume_start(inventory_items_origin.get_child(inventory_item_selected_index).get_meta("item_id"))
+
+		# failed to consume
+		if not success:
+			# play error sound
+			SoundManager.play("Inventory", "deny")
 
 func _on_player_inventory_updated():
 	# get inventory
@@ -90,23 +100,27 @@ func _on_player_inventory_updated():
 	var item_count = inventory_items_origin.get_child_count()
 
 	# get new item count
-	var new_item_count = inventory.size()
+	var new_item_count = 0
+	for item_id in inventory.keys():
+		if inventory[item_id] > 0:
+			new_item_count += 1
 
 	# hide missing items in inventory HUD
 	for item in inventory_items.get_children():
 		# get item id
 		var item_id = (item as Pickup).item_id
 
-		if not inventory.has(item_id):
+		# does not have item in inventory
+		if not inventory.has(item_id) or inventory[item_id] <= 0:
 			# hide item
 			(item as Pickup).visible = false
 
 			# remove item position representation
 			if inventory_items_origin.has_node(item_id):
-				inventory_items_origin.get_node(item_id).queue_free()
+				inventory_items_origin.get_node(item_id).free()
 
 	# clamp selected item index
-	inventory_item_selected_index = clamp(inventory_item_selected_index, 0, new_item_count - 1)
+	inventory_item_selected_index = clamp(inventory_item_selected_index, 0, max(new_item_count - 1, 0))
 
 	# no items left
 	if new_item_count == 0:
@@ -121,7 +135,7 @@ func _on_player_inventory_updated():
 
 	# add missing items from player inventory to inventory HUD
 	for item_id in inventory:
-		if not inventory_items.get_node(item_id).visible:
+		if inventory[item_id] > 0 and not inventory_items.get_node(item_id).visible:
 			# make item visible
 			var new_item: Pickup = inventory_items.get_node(item_id)
 			new_item.visible = true
@@ -138,7 +152,7 @@ func _on_player_inventory_updated():
 	# spread items along circle evenly, if there are new items
 	if item_count != new_item_count:
 		# calculate distance between items
-		inventory_item_distance = 360.0 / inventory.size()
+		inventory_item_distance = 360.0 / inventory_items_origin.get_child_count()
 
 		# set item position representation position
 		var item_index = 0
@@ -149,8 +163,14 @@ func _on_player_inventory_updated():
 			# next iteration
 			item_index += 1
 
+		# reset origin rotation
+		new_inventory_items_origin_rotation = inventory_item_selected_index * deg_to_rad(inventory_item_distance)
+
 	# update item labels
-	update_selected_item_info()
+	if inventory_items_origin.get_child_count() > 0:
+		update_selected_item_info()
+	else:
+		clear_selected_item_info()
 
 func switch_inventory_item(item_change: int) -> void:
 		# cooldown
@@ -162,7 +182,7 @@ func switch_inventory_item(item_change: int) -> void:
 			return
 
 		# only one item
-		if not player.inventory.size() > 1:
+		if not inventory_items_origin.get_child_count() > 1:
 			return
 
 		# start cooldown timer
@@ -172,7 +192,7 @@ func switch_inventory_item(item_change: int) -> void:
 		new_inventory_items_origin_rotation += item_change * deg_to_rad(inventory_item_distance)
 
 		# change current selected item
-		inventory_item_selected_index = wrap(inventory_item_selected_index + item_change, 0, player.inventory.size())
+		inventory_item_selected_index = wrap(inventory_item_selected_index + item_change, 0, inventory_items_origin.get_child_count())
 
 		# play sound
 		SoundManager.play("Inventory", "switch")

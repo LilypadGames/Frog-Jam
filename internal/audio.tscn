@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://ch2pif81btlnp"]
+[gd_scene load_steps=14 format=3 uid="uid://ch2pif81btlnp"]
 
 [ext_resource type="Script" path="res://addons/resonate/sound_manager/sound_bank.gd" id="1_73rlx"]
 [ext_resource type="Script" path="res://addons/resonate/sound_manager/sound_event_resource.gd" id="2_gov0n"]
@@ -7,6 +7,7 @@
 [ext_resource type="AudioStream" uid="uid://dsxpw2smutyh8" path="res://assets/sounds/inventory_open.ogg" id="5_i7ek3"]
 [ext_resource type="AudioStream" uid="uid://cp2shv2uk4yhj" path="res://assets/sounds/inventory_close.ogg" id="6_238oy"]
 [ext_resource type="AudioStream" uid="uid://c1ppsbwk1wer7" path="res://assets/sounds/inventory_switch.ogg" id="7_lbw6w"]
+[ext_resource type="AudioStream" uid="uid://dmme6it4xs6he" path="res://assets/sounds/inventory_deny.ogg" id="8_c3nji"]
 
 [sub_resource type="Resource" id="Resource_5fmqx"]
 script = ExtResource("2_gov0n")
@@ -32,6 +33,12 @@ name = "switch"
 bus = ""
 streams = Array[AudioStream]([ExtResource("7_lbw6w")])
 
+[sub_resource type="Resource" id="Resource_abjx0"]
+script = ExtResource("2_gov0n")
+name = "deny"
+bus = ""
+streams = Array[AudioStream]([ExtResource("8_c3nji")])
+
 [node name="Audio" type="Node"]
 
 [node name="Sounds" type="Node" parent="."]
@@ -44,4 +51,4 @@ events = Array[ExtResource("2_gov0n")]([SubResource("Resource_5fmqx")])
 [node name="Inventory" type="Node" parent="Sounds"]
 script = ExtResource("1_73rlx")
 label = "Inventory"
-events = Array[ExtResource("2_gov0n")]([SubResource("Resource_42dg8"), SubResource("Resource_x2n0l"), SubResource("Resource_sk18e")])
+events = Array[ExtResource("2_gov0n")]([SubResource("Resource_42dg8"), SubResource("Resource_x2n0l"), SubResource("Resource_sk18e"), SubResource("Resource_abjx0")])
