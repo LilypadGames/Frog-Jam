@@ -42,20 +42,11 @@ func _input(event: InputEvent) -> void:
 	if event.is_action_released("inventory"):
 		if inventory_view.visible: 
 			# close inventory
-			SoundManager.play_sound(load(Cache.one_from(Cache.sfx["inventory"]["close"])))
-			inventory_animation_player.play("Close")
+			_close_inventory()
 
-			# show general hints
-			input_hints_general.visible = true
-			input_hints_inventory.visible = false
 		else:
 			# open inventory
-			SoundManager.play_sound(load(Cache.one_from(Cache.sfx["inventory"]["close"])))
-			inventory_animation_player.play("Open")
-
-			# show inventory hints
-			input_hints_general.visible = false
-			input_hints_inventory.visible = true
+			_open_inventory()
 
 	# next/previous item in inventory on macOS magic mouse/trackpad
 	elif event is InputEventPanGesture:
@@ -87,10 +78,45 @@ func _input(event: InputEvent) -> void:
 		# attempt to consume
 		var success = player.consume_start(inventory_items_origin.get_child(inventory_item_selected_index).get_meta("item_id"))
 
+		# successfully consumed
+		if success:
+			# close inventory
+			_close_inventory(true)
+
 		# failed to consume
-		if not success:
+		else:
 			# play error sound
 			SoundManager.play_sound(load(Cache.one_from(Cache.sfx["inventory"]["deny"])))
+
+func _close_inventory(quietly: bool = false) -> void:
+	if quietly:
+		inventory_view.visible = false
+
+	else:
+		# play sound
+		SoundManager.play_sound(load(Cache.one_from(Cache.sfx["inventory"]["close"])))
+
+		# close anim
+		inventory_animation_player.play("Close")
+
+	# show general hints
+	input_hints_general.visible = true
+	input_hints_inventory.visible = false
+
+func _open_inventory(quietly: bool = false) -> void:
+	if quietly:
+		inventory_view.visible = false
+
+	else:
+		# play sound
+		SoundManager.play_sound(load(Cache.one_from(Cache.sfx["inventory"]["close"])))
+
+		# open anim
+		inventory_animation_player.play("Open")
+
+	# show inventory hints
+	input_hints_general.visible = false
+	input_hints_inventory.visible = true
 
 func _on_player_inventory_updated():
 	# get inventory
