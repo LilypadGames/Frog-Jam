@@ -109,7 +109,7 @@ func _open_inventory(quietly: bool = false) -> void:
 
 	else:
 		# play sound
-		SoundManager.play_sound(load(Cache.one_from(Cache.sfx["inventory"]["close"])))
+		SoundManager.play_sound(load(Cache.one_from(Cache.sfx["inventory"]["open"])))
 
 		# open anim
 		inventory_animation_player.play("Open")

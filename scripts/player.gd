@@ -28,13 +28,11 @@ const TARGET_MAX_DISTANCE := 15.0 # max positional distance an enemy can be to b
 
 # state
 var committed := false # whether the player is currently commited to a movement option or not (attacking, dodging, etc.)
-var current_action: String = "" # the player's current async action (ex: consuming an item)
+var consume_item_id: String = "" # item player is currently consuming
+var consume_sound: AudioStreamPlayer
 var targeted: Enemy # the currently targeted object
 var dodge_direction: Vector3 # the direction of the current dodge roll
 var inventory: Dictionary = {}
-
-# internal
-var consume_sound: AudioStream
 
 func _physics_process(delta) -> void:
 	# camera
@@ -290,8 +288,8 @@ func consume_start(item_id: String) -> bool:
 	if committed:
 		return false
 
-	# currently performing action
-	if not current_action == "":
+	# currently consuming item
+	if not consume_item_id == "":
 		return false
 
 	# does not have enough
@@ -305,36 +303,39 @@ func consume_start(item_id: String) -> bool:
 	inventory_updated.emit()
 
 	# set current action
-	current_action = "Consume"
+	consume_item_id = item_id
 
 	# play consume anim
-	animation_controller.set_action(current_action)
+	animation_controller.set_action("Consume")
 
 	# start consume timer
+	consume_timer.wait_time = Cache.game["items"][item_id]["time"]
 	consume_timer.start()
 
 	# play sound effects
-	SoundManager.play_sound(load(Cache.one_from(Cache.sfx["interact"]["drink_start"])))
-	consume_sound = load(Cache.one_from(Cache.sfx["interact"]["drink"]))
-	SoundManager.play_sound(consume_sound)
+	SoundManager.play_sound(load(Cache.one_from(Cache.sfx["interact"][Cache.game["items"][item_id]["sfx"]["start"]])))
+	consume_sound = SoundManager.play_sound(load(Cache.one_from(Cache.sfx["interact"][Cache.game["items"][item_id]["sfx"]["loop"]])))
 
 	# successfully started consuming
 	return true
 
 # called when player finishes consuming an item
 func consume_end(_premature: bool = false) -> void:
-	# not currently consuming
-	if current_action != "Consume":
+	# no consume sound
+	if not consume_sound:
 		return
 
 	# end consume anim
-	animation_controller.set_action(current_action, false)
+	animation_controller.set_action("Consume", false)
 
 	# end drink sound
-	SoundManager.stop_sound(consume_sound)
+	Cache.fade_out_sound(consume_sound)
+
+	# reset consume sound
+	consume_sound = null
 
 	# reset action
-	current_action = ""
+	consume_item_id = ""
 
 # called when player is attacking during attack animation
 func _on_start_hitbox(type: String) -> void:

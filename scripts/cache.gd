@@ -1,14 +1,24 @@
 extends Node
 
+# constants
+const FADE_OUT_SOUND_SPEED: float = 3.0
+
 # internal
 var path: String = "res://data"
-var lang: Dictionary = {}
-var lang_files: Array[String] = ["en_us"]
+var game: Dictionary = {}
+var game_files: Array[String] = ["items"]
 var sfx: Dictionary = {}
 var sfx_files: Array[String] = ["interact", "inventory"]
+var lang: Dictionary = {}
+var lang_files: Array[String] = ["en_us"]
+var fade_out_sounds: Array[AudioStreamPlayer] = []
 
 # cache registry and data
-func _ready():
+func _ready() -> void:
+	# game data
+	for file in game_files:
+		game[file] = _parse_json(path + "/game/" + file + ".json")
+
 	# sounds
 	for file in sfx_files:
 		sfx[file] = _parse_json(path + "/sfx/" + file + ".json")
@@ -16,6 +26,17 @@ func _ready():
 	# language
 	for file in lang_files:
 		lang[file] = _parse_json(path + "/lang/" + file + ".json")
+
+func _process(delta: float) -> void:
+	# fade out sounds
+	for sound_index in range(fade_out_sounds.size() - 1, -1, -1):
+		# lower volume over time
+		fade_out_sounds[sound_index].volume_db = lerp(fade_out_sounds[sound_index].volume_db, -50.0, delta * FADE_OUT_SOUND_SPEED)
+
+		# stop when done
+		if floor(fade_out_sounds[sound_index].volume_db) <= -50:
+			SoundManager.stop_sound(fade_out_sounds[sound_index].stream)
+			fade_out_sounds.remove_at(sound_index)
 
 # parse data from specified json file
 func _parse_json(file_path: String):
@@ -45,3 +66,7 @@ func one_from(input) -> String:
 		return input[randi() % input.size()]
 	else:
 		return "ERROR"
+
+# fades out a given sound
+func fade_out_sound(sound: AudioStreamPlayer) -> void:
+	fade_out_sounds.push_front(sound)
