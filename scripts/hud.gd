@@ -15,6 +15,7 @@ const INVENTORY_ITEM_ROTATION_SPEED := 7.0
 @onready var input_hints_general: Label = %GeneralHints
 @onready var input_hints_inventory: Label = %InventoryHints
 @onready var inventory_view: Control = %Inventory
+@onready var inventory_animation_player: AnimationPlayer = %InventoryAnimationPlayer
 @onready var inventory_items: Node = %InventoryItems
 @onready var inventory_items_origin: Node3D = %InventoryItemsOrigin
 @onready var inventory_switch_cooldown: Timer = %InventorySwitchCooldown
@@ -42,7 +43,7 @@ func _input(event: InputEvent) -> void:
 		if inventory_view.visible: 
 			# close inventory
 			SoundManager.play("Inventory", "close")
-			inventory_view.visible = false
+			inventory_animation_player.play("Close")
 
 			# show general hints
 			input_hints_general.visible = true
@@ -50,7 +51,7 @@ func _input(event: InputEvent) -> void:
 		else:
 			# open inventory
 			SoundManager.play("Inventory", "open")
-			inventory_view.visible = true
+			inventory_animation_player.play("Open")
 
 			# show inventory hints
 			input_hints_general.visible = false
