@@ -33,6 +33,9 @@ var targeted: Enemy # the currently targeted object
 var dodge_direction: Vector3 # the direction of the current dodge roll
 var inventory: Dictionary = {}
 
+# internal
+var consume_sound: AudioStream
+
 func _physics_process(delta) -> void:
 	# camera
 	handle_camera(delta)
@@ -310,6 +313,11 @@ func consume_start(item_id: String) -> bool:
 	# start consume timer
 	consume_timer.start()
 
+	# play sound effects
+	SoundManager.play_sound(load(Cache.one_from(Cache.sfx["interact"]["drink_start"])))
+	consume_sound = load(Cache.one_from(Cache.sfx["interact"]["drink"]))
+	SoundManager.play_sound(consume_sound)
+
 	# successfully started consuming
 	return true
 
@@ -321,6 +329,9 @@ func consume_end(_premature: bool = false) -> void:
 
 	# end consume anim
 	animation_controller.set_action(current_action, false)
+
+	# end drink sound
+	SoundManager.stop_sound(consume_sound)
 
 	# reset action
 	current_action = ""

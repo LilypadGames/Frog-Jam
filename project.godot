@@ -22,13 +22,12 @@ manager/sound/pool_3D_size=10
 
 [autoload]
 
-SoundManager="*res://addons/resonate/sound_manager/sound_manager.gd"
-MusicManager="*res://addons/resonate/music_manager/music_manager.gd"
 Cache="*res://scripts/cache.gd"
+SoundManager="*res://addons/sound_manager/sound_manager.gd"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/anthonyec.camera_preview/plugin.cfg", "res://addons/resonate/plugin.cfg", "res://addons/terrain_3d/plugin.cfg")
+enabled=PackedStringArray("res://addons/anthonyec.camera_preview/plugin.cfg", "res://addons/sound_manager/plugin.cfg", "res://addons/terrain_3d/plugin.cfg")
 
 [filesystem]
 

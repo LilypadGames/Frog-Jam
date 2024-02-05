@@ -42,7 +42,7 @@ func _input(event: InputEvent) -> void:
 	if event.is_action_released("inventory"):
 		if inventory_view.visible: 
 			# close inventory
-			SoundManager.play("Inventory", "close")
+			SoundManager.play_sound(load(Cache.one_from(Cache.sfx["inventory"]["close"])))
 			inventory_animation_player.play("Close")
 
 			# show general hints
@@ -50,7 +50,7 @@ func _input(event: InputEvent) -> void:
 			input_hints_inventory.visible = false
 		else:
 			# open inventory
-			SoundManager.play("Inventory", "open")
+			SoundManager.play_sound(load(Cache.one_from(Cache.sfx["inventory"]["close"])))
 			inventory_animation_player.play("Open")
 
 			# show inventory hints
@@ -90,7 +90,7 @@ func _input(event: InputEvent) -> void:
 		# failed to consume
 		if not success:
 			# play error sound
-			SoundManager.play("Inventory", "deny")
+			SoundManager.play_sound(load(Cache.one_from(Cache.sfx["inventory"]["deny"])))
 
 func _on_player_inventory_updated():
 	# get inventory
@@ -195,7 +195,7 @@ func switch_inventory_item(item_change: int) -> void:
 		inventory_item_selected_index = wrap(inventory_item_selected_index + item_change, 0, inventory_items_origin.get_child_count())
 
 		# play sound
-		SoundManager.play("Inventory", "switch")
+		SoundManager.play_sound(load(Cache.one_from(Cache.sfx["inventory"]["switch"])))
 
 		# update item labels
 		update_selected_item_info()

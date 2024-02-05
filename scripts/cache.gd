@@ -4,15 +4,21 @@ extends Node
 var path: String = "res://data"
 var lang: Dictionary = {}
 var lang_files: Array[String] = ["en_us"]
+var sfx: Dictionary = {}
+var sfx_files: Array[String] = ["interact", "inventory"]
 
 # cache registry and data
 func _ready():
+	# sounds
+	for file in sfx_files:
+		sfx[file] = _parse_json(path + "/sfx/" + file + ".json")
+
 	# language
 	for file in lang_files:
-		lang[file] = parse_json(path + "/lang/" + file + ".json")
+		lang[file] = _parse_json(path + "/lang/" + file + ".json")
 
 # parse data from specified json file
-func parse_json(file_path: String):
+func _parse_json(file_path: String):
 	# file doesn't exist
 	if not FileAccess.file_exists(file_path):
 		prints("ERROR: Attempting to access", file_path)
@@ -29,3 +35,13 @@ func parse_json(file_path: String):
 
 	# successfuly parsed
 	return parsed_data
+
+# abstracts paths to return a single output from an array or single string
+func one_from(input) -> String:
+	if typeof(input) == TYPE_STRING:
+		return input
+	elif typeof(input) == TYPE_ARRAY:
+		randomize()
+		return input[randi() % input.size()]
+	else:
+		return "ERROR"

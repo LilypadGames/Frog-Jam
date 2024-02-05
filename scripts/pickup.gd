@@ -35,7 +35,7 @@ func _on_collision(body: Node3D) -> void:
 		animation_player.play("pickup_anims/Pickup")
 
 		# play pickup sound
-		SoundManager.play("Pickup", "pickup")
+		SoundManager.play_sound(load(Cache.one_from(Cache.sfx["interact"]["pickup"])))
 
 		# give player item
 		body.on_pickup(item_id)
