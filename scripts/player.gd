@@ -10,7 +10,7 @@ signal inventory_updated
 @onready var character: Node3D = %Character
 @onready var hitbox_horizontal: Area3D = %HitboxHorizontal
 @onready var hitbox_vertical: Area3D = %HitboxVertical
-@onready var animation: AnimationPlayer = %AnimationPlayer
+@onready var animation_controller: PlayerAnimController = %AnimationTree
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 # properties
@@ -52,7 +52,7 @@ func _physics_process(delta) -> void:
 
 	# only run the following if not in a committed state
 	if not committed:
-		# horizontal velocity
+		# movement
 		handle_movement(new_direction)
 
 		# animation
@@ -138,8 +138,7 @@ func handle_attack() -> void:
 		velocity.z = 0
 
 		# attacking anim
-		animation.stop()
-		animation.play("player_anims/Attack Slash")
+		animation_controller.play_anim("Attack Slash")
 
 		# committed to attacking state
 		committed = true
@@ -159,29 +158,28 @@ func handle_dodge(direction: Vector3) -> void:
 		dodge_direction = direction
 
 		# dodge anim
-		animation.stop()
 		if targeted:
 			if Input.is_action_pressed("ui_left") or Input.is_action_pressed("ui_right"):
 				# side roll
-				animation.play("player_anims/Roll")
+				animation_controller.play_anim("Roll")
 
 				# rotate character to movement direction
 				character.global_rotation.y = lerp_angle(character.global_rotation.y, atan2(direction.x, direction.z), 1)
 
 			elif Input.is_action_pressed("ui_up"):
 				# forward jump attack
-				animation.play("player_anims/Attack Jump")
+				animation_controller.play_anim("Attack Jump")
 
 				# rotate character to movement direction
 				character.global_rotation.y = lerp_angle(character.global_rotation.y, atan2(direction.x, direction.z), 1)
 
 			elif Input.is_action_pressed("ui_down"):
 				# sick backflip
-				animation.play("player_anims/Backflip")
+				animation_controller.play_anim("Backflip")
 
 		else:
 			# roll in any direction
-			animation.play("player_anims/Roll")
+			animation_controller.play_anim("Roll")
 
 			# rotate character to movement direction
 			character.global_rotation.y = lerp_angle(character.global_rotation.y, atan2(direction.x, direction.z), 1)
@@ -209,66 +207,60 @@ func handle_movement(direction: Vector3) -> void:
 		velocity.z = move_toward(velocity.z, 0, speed)
 
 func handle_animation(delta: float, direction: Vector3) -> void:
+	# horizontal
+	if Input.is_action_pressed("ui_left"):
+		# strafe left
+		animation_controller.horizontal_movement = -1
+	elif Input.is_action_pressed("ui_right"):
+		# strafe right
+		animation_controller.horizontal_movement = 1
+	else:
+		# idle
+		animation_controller.horizontal_movement = 0
+
 	# face target
 	if targeted:
-		# lerp rotation of player character to enemy position
+		# set targeting state
+		animation_controller.set_targeting(true)
+
+		# lerp rotation of player character to target
 		character.global_rotation.y = lerp_angle(character.global_rotation.y, atan2(targeted.global_position.x - self.position.x, targeted.global_position.z - self.position.z), 0.5)
 
-		# walking
-		if (velocity.x != 0 or velocity.z != 0):
-			# strafe left
-			if Input.is_action_pressed("ui_left"):
-				if animation.current_animation != "player_anims/Strafe Left":
-					animation.play("player_anims/Strafe Left")
-
-			# strage right
-			elif Input.is_action_pressed("ui_right"):
-				if animation.current_animation != "player_anims/Strafe Right":
-					animation.play("player_anims/Strafe Right")
-
-			# walk or run forwards
-			elif Input.is_action_pressed("ui_up"):
+		# vertical
+		if Input.is_action_pressed("ui_up"):
+			if Input.is_action_pressed("boost"):
 				# run
-				if Input.is_action_pressed("boost"):
-					if animation.current_animation != "player_anims/Run":
-						animation.play("player_anims/Run")
-
+				animation_controller.vertical_movement = 1
+			else:
 				#walk
-				elif animation.current_animation != "player_anims/Walk":
-					animation.play("player_anims/Walk")
-
+				animation_controller.vertical_movement = 0.5
+		elif Input.is_action_pressed("ui_down"):
 			# walk backwards
-			elif Input.is_action_pressed("ui_down"):
-				if animation.current_animation != "player_anims/Walk Backwards":
-					animation.play("player_anims/Walk Backwards")
-
-		# idle
+			animation_controller.vertical_movement = -1
 		else:
-			# set animation
-			if animation.current_animation != "player_anims/Idle":
-				animation.play("player_anims/Idle")
+			# idle
+			animation_controller.vertical_movement = 0
 
 	# face walk direction
 	else: 
-		# walking
-		if (velocity.x != 0 or velocity.z != 0):
-			# run animation
-			if Input.is_action_pressed("boost"):
-				if animation.current_animation != "player_anims/Run":
-					animation.play("player_anims/Run")
+		# set targeting state
+		animation_controller.set_targeting(false)
 
-			# walk animation
-			elif animation.current_animation != "player_anims/Walk":
-				animation.play("player_anims/Walk")
-
+		# player is moving
+		if not Input.get_vector("ui_right", "ui_left", "ui_down", "ui_up") == Vector2.ZERO:
 			# lerp rotation of player character to movement direction
 			character.global_rotation.y = lerp_angle(character.global_rotation.y, atan2(direction.x, direction.z), delta * CHARACTER_ROTATION_SPEED)
 
-		# idle
+		# vertical
+			if Input.is_action_pressed("boost"):
+				# run
+				animation_controller.vertical_movement = 1
+			else:
+				#walk
+				animation_controller.vertical_movement = 0.5
 		else:
-			# set animation
-			if animation.current_animation != "player_anims/Idle":
-				animation.play("player_anims/Idle")
+			# idle
+			animation_controller.vertical_movement = 0
 
 # called when player picks up an item
 func on_pickup(item_id: String, amount: int = 1) -> void:
@@ -280,12 +272,6 @@ func on_pickup(item_id: String, amount: int = 1) -> void:
 
 	# signal that player inventory has been changes
 	inventory_updated.emit()
-
-# called when an animation completes
-func _on_animation_player_animation_finished(_anim_name: String) -> void:
-	if committed:
-		# no longer committed to state
-		committed = false
 
 # called when player is attacking during attack animation
 func _on_start_hitbox(type: String) -> void:
@@ -320,3 +306,12 @@ func _on_stop_velocity() -> void:
 	# stop velocity
 	velocity.x = 0
 	velocity.z = 0
+
+# called when an animation finishes
+func _on_animation_finished(_anim_name: StringName) -> void:
+	if committed:
+		# no longer committed to state
+		committed = false
+
+		# return to movement anim
+		animation_controller.play_anim("Movement")
