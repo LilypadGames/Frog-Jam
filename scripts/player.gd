@@ -12,6 +12,7 @@ signal inventory_updated
 @onready var hitbox_vertical: Area3D = %HitboxVertical
 @onready var animation_controller: PlayerAnimController = %AnimationTree
 @onready var consume_timer: Timer = %ConsumeTimer
+@onready var consumables: BoneAttachment3D = %Consumables
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 # properties
@@ -308,6 +309,9 @@ func consume_start(item_id: String) -> bool:
 	# play consume anim
 	animation_controller.set_action("Consume")
 
+	# show consumable
+	consumables.get_node(item_id).visible = true
+
 	# start consume timer
 	consume_timer.wait_time = Cache.game["items"][item_id]["time"]
 	consume_timer.start()
@@ -327,6 +331,9 @@ func consume_end(_premature: bool = false) -> void:
 
 	# end consume anim
 	animation_controller.set_action("Consume", false)
+
+	# hide consumable
+	consumables.get_node(consume_item_id).visible = false
 
 	# end drink sound
 	Cache.fade_out_sound(consume_sound)
