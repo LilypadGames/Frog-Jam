@@ -319,6 +319,7 @@ func consume_start(item_id: String) -> bool:
 	# play sound effects
 	SoundManager.play_sound(load(Cache.one_from(Cache.sfx["interact"][Cache.game["items"][item_id]["sfx"]["start"]])))
 	consume_sound = SoundManager.play_sound(load(Cache.one_from(Cache.sfx["interact"][Cache.game["items"][item_id]["sfx"]["loop"]])))
+	Cache.reset_sound(consume_sound)
 
 	# successfully started consuming
 	return true

@@ -36,6 +36,7 @@ func _process(delta: float) -> void:
 		# stop when done
 		if floor(fade_out_sounds[sound_index].volume_db) <= -50:
 			SoundManager.stop_sound(fade_out_sounds[sound_index].stream)
+			fade_out_sounds[sound_index].volume_db = 0
 			fade_out_sounds.remove_at(sound_index)
 
 # parse data from specified json file
@@ -66,6 +67,16 @@ func one_from(input) -> String:
 		return input[randi() % input.size()]
 	else:
 		return "ERROR"
+
+# resets a sound
+func reset_sound(sound: AudioStreamPlayer) -> void:
+	# remove sound from fade out if exists
+	for sound_index in range(fade_out_sounds.size() - 1, -1, -1):
+		if fade_out_sounds[sound_index].stream == sound.stream:
+			fade_out_sounds.remove_at(sound_index)
+
+	# reset volume
+	sound.volume_db = 0
 
 # fades out a given sound
 func fade_out_sound(sound: AudioStreamPlayer) -> void:
