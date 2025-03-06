@@ -1,11 +1,11 @@
 [gd_scene load_steps=29 format=3 uid="uid://c323s5f3calyp"]
 
-[ext_resource type="Script" path="res://scripts/hud.gd" id="1_2kwb5"]
+[ext_resource type="Script" uid="uid://b76wnnuuf1kee" path="res://scripts/hud.gd" id="1_2kwb5"]
 [ext_resource type="PackedScene" uid="uid://bcnxqq4asb8ls" path="res://objects/ui/heart_icon.tscn" id="2_ny352"]
 [ext_resource type="PackedScene" uid="uid://b82l10numq21q" path="res://objects/ui/heart_icon_empty.tscn" id="3_6mmjb"]
 [ext_resource type="FontFile" uid="uid://dr1vaa70et4rd" path="res://assets/fonts/Bitstream-Vera-Sans/Vera-Bold.ttf" id="4_4huet"]
 [ext_resource type="Texture2D" uid="uid://d1qtqslkxnoe5" path="res://assets/fonts/inputs/kenny_input-prompts/Keyboard & Mouse/Vector/keyboard_shift_outline.svg" id="5_5jjjg"]
-[ext_resource type="Script" path="res://scripts/input_hint.gd" id="6_r4gcw"]
+[ext_resource type="Script" uid="uid://bsfd7eorvqrgf" path="res://scripts/input_hint.gd" id="6_r4gcw"]
 [ext_resource type="Texture2D" uid="uid://db01uu0pap6v6" path="res://assets/fonts/inputs/kenny_input-prompts/Keyboard & Mouse/Vector/keyboard_shift.svg" id="7_2rwci"]
 [ext_resource type="Texture2D" uid="uid://cx5xq8ud4idhp" path="res://assets/fonts/inputs/kenny_input-prompts/Keyboard & Mouse/Vector/keyboard_space_outline.svg" id="8_m05qx"]
 [ext_resource type="Texture2D" uid="uid://cwdggpwcri67n" path="res://assets/fonts/inputs/kenny_input-prompts/Keyboard & Mouse/Vector/keyboard_space.svg" id="9_8fd3e"]
@@ -108,9 +108,9 @@ tracks/1/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_6y3d0"]
 _data = {
-"Close": SubResource("Animation_2e15i"),
-"Default": SubResource("Animation_6c231"),
-"Open": SubResource("Animation_cyusi")
+&"Close": SubResource("Animation_2e15i"),
+&"Default": SubResource("Animation_6c231"),
+&"Open": SubResource("Animation_cyusi")
 }
 
 [sub_resource type="Environment" id="Environment_q1hdx"]
@@ -155,8 +155,8 @@ grow_horizontal = 0
 grow_vertical = 0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.34902)
-theme_override_constants/outline_size = 6
 theme_override_constants/line_spacing = 0
+theme_override_constants/outline_size = 6
 theme_override_fonts/font = ExtResource("4_4huet")
 theme_override_font_sizes/font_size = 20
 text = "Sprint
@@ -236,8 +236,8 @@ grow_horizontal = 0
 grow_vertical = 0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.34902)
-theme_override_constants/outline_size = 6
 theme_override_constants/line_spacing = 0
+theme_override_constants/outline_size = 6
 theme_override_fonts/font = ExtResource("4_4huet")
 theme_override_font_sizes/font_size = 20
 text = "Consume
@@ -365,7 +365,7 @@ clip_text = true
 [node name="InventoryAnimationPlayer" type="AnimationPlayer" parent="Inventory"]
 unique_name_in_owner = true
 libraries = {
-"": SubResource("AnimationLibrary_6y3d0")
+&"": SubResource("AnimationLibrary_6y3d0")
 }
 autoplay = "Default"
 
