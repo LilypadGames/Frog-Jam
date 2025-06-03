@@ -50,3 +50,6 @@ Inventory Input Hints
 Consume Action, with Visuals, Sounds, and Particles
 
 Animation Tree- Separation of Upper and Lower Body in Animations
+
+> [!TIP]
+> Need help? Join our [DevFrogs discord](https://discord.gg/2aVq8qmcSr).
